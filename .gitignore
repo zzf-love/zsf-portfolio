@@ -41,3 +41,4 @@ next-env.d.ts
 # prisma
 prisma/portfolio.db
 prisma/portfolio.db-journal
+*.db
