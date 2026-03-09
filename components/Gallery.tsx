@@ -136,13 +136,16 @@ export default function Gallery({ folder }: GalleryProps) {
         </div>
       ) : (
         <div className={`gallery-grid cols-${columns}`}>
-          {images.map((img, index) => {
+          {/* 按列数交错分配：col0拿 0,cols,2cols… col1拿 1,cols+1… 保证每列顶部都是高星级 */}
+          {Array.from({ length: columns }, (_, col) =>
+            images.filter((_, i) => i % columns === col)
+          ).flat().map((img, index) => {
             const tags = Array.isArray(img.tags) ? img.tags : [];
             return (
               <div
                 key={img.id}
                 className="gallery-item"
-                onClick={() => openLightbox(index)}
+                onClick={() => openLightbox(images.indexOf(img))}
                 data-cursor-hover
                 style={{ animationDelay: `${(index % 12) * 0.04}s` }}
               >
