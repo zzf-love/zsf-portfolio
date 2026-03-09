@@ -44,16 +44,7 @@ export const STAR_WEIGHTS: Record<number, number> = {
 };
 
 export function weightedShuffle<T extends { stars: number }>(items: T[]): T[] {
-  const visible = items.filter((item) => item.stars > 0);
-
-  // 按星级分组，同组内随机打乱，高星级组永远排在低星级组前面
-  const groups: Record<number, T[]> = {};
-  for (const item of visible) {
-    if (!groups[item.stars]) groups[item.stars] = [];
-    groups[item.stars].push(item);
-  }
-  for (const star in groups) {
-    groups[star] = groups[star].sort(() => Math.random() - 0.5);
-  }
-  return [5, 4, 3, 2, 1].flatMap((s) => groups[s] ?? []);
+  return items
+    .filter((item) => item.stars > 0)
+    .sort((a, b) => b.stars - a.stars);
 }
