@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import Anthropic from "@anthropic-ai/sdk";
 
 const FOLDER_CONTEXT: Record<string, string> = {
   xcxd: "北京兴长信达科技发展有限公司（为 Kinder健达/费列罗/Nutella 等国际食品品牌做天猫旗舰店电商视觉）",
@@ -18,15 +17,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "imageId is required" }, { status: 400 });
     }
 
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey = process.env.DEEPSEEK_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
-        { error: "Anthropic API key not configured" },
+        { error: "DeepSeek API key not configured" },
         { status: 500 }
       );
     }
-
-    const client = new Anthropic({ apiKey });
 
     const folderContext = FOLDER_CONTEXT[folder] || "独立设计项目";
     const tagsStr = Array.isArray(tags) && tags.length > 0 ? tags.join("、") : "未标注";
@@ -47,16 +44,28 @@ export async function POST(request: NextRequest) {
 5. 不要开头客套，直接进入评析
 6. 不需要提及设计师姓名`;
 
-    const message = await client.messages.create({
-      model: "claude-sonnet-4-6",
-      max_tokens: 400,
-      messages: [{ role: "user", content: prompt }],
+    const res = await fetch("https://api.deepseek.com/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: "deepseek-chat",
+        max_tokens: 400,
+        messages: [{ role: "user", content: prompt }],
+      }),
     });
 
-    const aiText =
-      message.content[0].type === "text" ? message.content[0].text : "";
+    if (!res.ok) {
+      const err = await res.text();
+      console.error("DeepSeek API error:", err);
+      throw new Error(`DeepSeek API error: ${res.status}`);
+    }
 
-    // Save aiDesc back to database
+    const data = await res.json();
+    const aiText: string = data.choices?.[0]?.message?.content || "";
+
     if (aiText) {
       await prisma.image.update({
         where: { id: imageId },
