@@ -512,17 +512,13 @@ body {
 ══════════════════════════════════════ */
 .gallery-grid {
   padding: 28px 40px 40px;
-  column-gap: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
 }
-
-.gallery-grid.cols-2 { column-count: 2; }
-.gallery-grid.cols-3 { column-count: 3; }
-.gallery-grid.cols-4 { column-count: 4; }
 
 /* 卡片 — 材质感表面 */
 .gallery-item {
-  break-inside: avoid;
-  margin-bottom: 12px;
   position: relative;
   overflow: hidden;
   border-radius: 2px;           /* 近乎无圆角 */
@@ -1298,9 +1294,6 @@ body {
   .hero-section { padding: 80px 20px 40px; }
   .gallery-topbar { padding: 14px 16px; }
   .gallery-grid { padding: 20px 16px 40px; }
-  .gallery-grid.cols-3,
-  .gallery-grid.cols-4 { column-count: 2; }
-  .gallery-grid.cols-2 { column-count: 1; }
 
   .lightbox-container { grid-template-columns: 1fr; }
   .lightbox-info-panel { max-height: 48vh; border-left: none; border-top: 1px solid var(--edge); }
@@ -1311,10 +1304,6 @@ body {
 }
 
 @media (max-width: 500px) {
-  .gallery-grid,
-  .gallery-grid.cols-2,
-  .gallery-grid.cols-3,
-  .gallery-grid.cols-4 { column-count: 1; }
   .media-grid { grid-template-columns: 1fr; }
 }
 

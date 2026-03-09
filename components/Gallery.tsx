@@ -15,6 +15,20 @@ export default function Gallery({ folder }: GalleryProps) {
   const [columns, setColumns] = useState(3);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1280
+  );
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // 移动端响应式：根据窗口宽度限制实际列数
+  const effectiveColumns =
+    windowWidth <= 500 ? 1 : windowWidth <= 900 ? Math.min(columns, 2) : columns;
+
   const fetchImages = useCallback(async () => {
     setLoading(true);
     try {
@@ -135,47 +149,56 @@ export default function Gallery({ folder }: GalleryProps) {
           暂无作品
         </div>
       ) : (
-        <div className={`gallery-grid cols-${columns}`}>
-          {/* 按列数交错分配：col0拿 0,cols,2cols… col1拿 1,cols+1… 保证每列顶部都是高星级 */}
-          {Array.from({ length: columns }, (_, col) =>
-            images.filter((_, i) => i % columns === col)
-          ).flat().map((img, index) => {
-            const tags = Array.isArray(img.tags) ? img.tags : [];
-            return (
-              <div
-                key={img.id}
-                className="gallery-item"
-                onClick={() => openLightbox(images.indexOf(img))}
-                data-cursor-hover
-                style={{ animationDelay: `${(index % 12) * 0.04}s` }}
-              >
-                <div className="gallery-item-index">
-                  {String(index + 1).padStart(2, "0")}
-                </div>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={img.url}
-                  alt={img.title || img.filename}
-                  style={{ width: "100%", height: "auto", display: "block" }}
-                  loading="lazy"
-                />
-                <div className="gallery-item-overlay">
-                  {img.title && (
-                    <div className="gallery-item-title">{img.title}</div>
-                  )}
-                  {tags.length > 0 && (
-                    <div className="gallery-item-tags">
-                      {tags.slice(0, 3).map((tag) => (
-                        <span key={tag} className="tag-chip">
-                          {tag}
-                        </span>
-                      ))}
+        <div className="gallery-grid">
+          {/* 显式 flex 列：col0 放 images[0,cols,2*cols…]，col1 放 images[1,cols+1…]
+              无论图片高度如何，每列顶部永远是最高星级图片 */}
+          {Array.from({ length: effectiveColumns }, (_, col) =>
+            images.filter((_, i) => i % effectiveColumns === col)
+          ).map((colImages, colIdx) => (
+            <div
+              key={colIdx}
+              style={{ flex: 1, display: "flex", flexDirection: "column", gap: "12px" }}
+            >
+              {colImages.map((img) => {
+                const globalIndex = images.indexOf(img);
+                const tags = Array.isArray(img.tags) ? img.tags : [];
+                return (
+                  <div
+                    key={img.id}
+                    className="gallery-item"
+                    onClick={() => openLightbox(globalIndex)}
+                    data-cursor-hover
+                    style={{ animationDelay: `${(globalIndex % 12) * 0.04}s` }}
+                  >
+                    <div className="gallery-item-index">
+                      {String(globalIndex + 1).padStart(2, "0")}
                     </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={img.url}
+                      alt={img.title || img.filename}
+                      style={{ width: "100%", height: "auto", display: "block" }}
+                      loading="lazy"
+                    />
+                    <div className="gallery-item-overlay">
+                      {img.title && (
+                        <div className="gallery-item-title">{img.title}</div>
+                      )}
+                      {tags.length > 0 && (
+                        <div className="gallery-item-tags">
+                          {tags.slice(0, 3).map((tag) => (
+                            <span key={tag} className="tag-chip">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ))}
         </div>
       )}
 
