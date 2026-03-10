@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import "./globals.css";
 
 const ChatWidget = dynamic(() => import("@/components/ChatWidget"), { ssr: false });
+const ThemeProvider = dynamic(() => import("@/components/ThemeProvider"), { ssr: false });
 
 export const metadata: Metadata = {
   title: "张森福 · 视觉设计师",
@@ -21,8 +22,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh-CN">
+    <html lang="zh-CN" suppressHydrationWarning>
+      <script dangerouslySetInnerHTML={{ __html: `(function(){var h=new Date().getHours();document.documentElement.setAttribute('data-theme',h>=7&&h<19?'light':'dark')})()` }} />
       <body suppressHydrationWarning>
+        <ThemeProvider />
         {children}
         <ChatWidget />
       </body>

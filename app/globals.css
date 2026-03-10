@@ -1592,3 +1592,86 @@ body {
   }
   .chat-toggle-btn { right: 16px; bottom: 16px; }
 }
+
+/* ══════════════════════════════════════
+   LIGHT THEME  (7:00 - 19:00 自动切换)
+══════════════════════════════════════ */
+[data-theme="light"] {
+  /* 主色板 */
+  --void:       #F7F6F1;
+  --surface:    #EFEEE8;
+  --plate:      #E8E6DE;
+  --edge:       #D6D4CB;
+  --edge-hi:    #C2C0B6;
+  --etch:       #00916A;
+  --etch-dim:   rgba(0, 145, 106, 0.12);
+  --etch-glow:  0 0 20px rgba(0, 145, 106, 0.18);
+  --ember:      #D93025;
+  --text:       #1C1B18;
+  --muted:      #6B6A63;
+  --faint:      #E2E0D6;
+  /* 别名 */
+  --card-bg:        #EFEEE8;
+  --border:         #D6D4CB;
+  --border-hover:   #C2C0B6;
+  --text-primary:   #1C1B18;
+  --text-secondary: #4A4840;
+  --text-muted:     #6B6A63;
+  --accent:         #00916A;
+  --accent-border:  rgba(0, 145, 106, 0.35);
+  --accent-dim:     rgba(0, 145, 106, 0.12);
+}
+
+/* 主题切换过渡（仅对 background/color/border，不影响其他动画） */
+html {
+  transition: background-color 0.6s ease, color 0.4s ease;
+}
+
+/* 特殊元素亮色覆盖 */
+[data-theme="light"] .hero-headline {
+  text-shadow:
+    -1px -1px 0 rgba(196, 193, 184, 0.9),
+     1px  1px 0 rgba(255, 255, 255, 0.95);
+}
+
+[data-theme="light"] .gallery-item-overlay {
+  background: linear-gradient(
+    to top,
+    rgba(225, 223, 213, 0.95) 0%,
+    rgba(225, 223, 213, 0.4) 60%,
+    transparent 100%
+  );
+}
+
+[data-theme="light"] .gallery-item-title {
+  color: #1C1B18;
+}
+
+[data-theme="light"] .grain-overlay {
+  opacity: 0.012;
+}
+
+[data-theme="light"] .sidebar::before {
+  opacity: 0.015;
+}
+
+[data-theme="light"] .cursor-dot {
+  mix-blend-mode: multiply;
+  background: #007A5A;
+}
+
+[data-theme="light"] .cursor-ring {
+  border-color: rgba(0, 145, 106, 0.4);
+}
+
+[data-theme="light"] .gallery-item {
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.10),
+    inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
+[data-theme="light"] .gallery-item:hover {
+  box-shadow:
+    0 12px 40px rgba(0,0,0,0.15),
+    inset 0 1px 0 rgba(255,255,255,0.7);
+}
