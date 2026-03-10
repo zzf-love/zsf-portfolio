@@ -26,6 +26,27 @@ model Image {
   updatedAt    DateTime @updatedAt
 }
 
+model ChatRateLimit {
+  id        String   @id @default(cuid())
+  ip        String
+  sessionId String   @default("")
+  date      String   // "YYYY-MM-DD" UTC+8
+  count     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([ip, date])
+  @@index([sessionId, date])
+}
+
+model DailyTokenUsage {
+  id           String   @id @default(cuid())
+  date         String   @unique
+  totalTokens  Int      @default(0)
+  requestCount Int      @default(0)
+  updatedAt    DateTime @updatedAt
+}
+
 model Media {
   id        String   @id @default(cuid())
   type      String   // "video" | "screenshot"

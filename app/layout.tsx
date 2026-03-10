@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import "./globals.css";
+
+const ChatWidget = dynamic(() => import("@/components/ChatWidget"), { ssr: false });
 
 export const metadata: Metadata = {
   title: "张森福 · 视觉设计师",
@@ -19,7 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN">
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        {children}
+        <ChatWidget />
+      </body>
     </html>
   );
 }
