@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-CN" suppressHydrationWarning>
-      <script dangerouslySetInnerHTML={{ __html: `(function(){var h=new Date().getHours();document.documentElement.setAttribute('data-theme',h>=7&&h<19?'light':'dark')})()` }} />
+      <script dangerouslySetInnerHTML={{ __html: `(function(){var h=new Date().getHours();document.documentElement.setAttribute('data-theme',h>=6&&h<21?'light':'dark')})()` }} />
       <body suppressHydrationWarning>
         <ThemeProvider />
         {children}

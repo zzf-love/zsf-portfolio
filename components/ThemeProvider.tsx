@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 function getTheme(): "light" | "dark" {
   const h = new Date().getHours();
-  return h >= 7 && h < 19 ? "light" : "dark";
+  return h >= 6 && h < 21 ? "light" : "dark";
 }
 
 export default function ThemeProvider() {
@@ -18,9 +18,9 @@ export default function ThemeProvider() {
       const now = new Date();
       const h = now.getHours();
       let nextHour: number;
-      if (h < 7) nextHour = 7;
-      else if (h < 19) nextHour = 19;
-      else nextHour = 7; // 明天
+      if (h < 6) nextHour = 6;
+      else if (h < 21) nextHour = 21;
+      else nextHour = 6; // 明天
 
       const next = new Date(now);
       next.setHours(nextHour, 0, 0, 0);
