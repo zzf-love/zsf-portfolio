@@ -1594,84 +1594,232 @@ body {
 }
 
 /* ══════════════════════════════════════
-   LIGHT THEME  (7:00 - 19:00 自动切换)
+   LIGHT THEME  (06:00 - 21:00 自动切换)
+   温暖米白日间配色 · Claude 风格
 ══════════════════════════════════════ */
+
 [data-theme="light"] {
-  /* 主色板 */
-  --void:       #F7F6F1;
-  --surface:    #EFEEE8;
-  --plate:      #E8E6DE;
-  --edge:       #D6D4CB;
-  --edge-hi:    #C2C0B6;
-  --etch:       #00916A;
-  --etch-dim:   rgba(0, 145, 106, 0.12);
-  --etch-glow:  0 0 20px rgba(0, 145, 106, 0.18);
-  --ember:      #D93025;
-  --text:       #1C1B18;
-  --muted:      #6B6A63;
-  --faint:      #E2E0D6;
+  /* 主色板 — 温暖米白 */
+  --void:       #F4F3EE;
+  --surface:    #ECEBE5;
+  --plate:      #E4E2DA;
+  --edge:       #D0CEC4;
+  --edge-hi:    #B8B6AC;
+  --etch:       #00785A;   /* 深绿，确保白底对比度 */
+  --etch-dim:   rgba(0, 120, 90, 0.10);
+  --etch-glow:  0 0 14px rgba(0, 120, 90, 0.14);
+  --ember:      #C0392B;
+  --text:       #1A1918;
+  --muted:      #6A6860;
+  --faint:      #DDDBD2;
+
   /* 别名 */
-  --card-bg:        #EFEEE8;
-  --border:         #D6D4CB;
-  --border-hover:   #C2C0B6;
-  --text-primary:   #1C1B18;
-  --text-secondary: #4A4840;
-  --text-muted:     #6B6A63;
-  --accent:         #00916A;
-  --accent-border:  rgba(0, 145, 106, 0.35);
-  --accent-dim:     rgba(0, 145, 106, 0.12);
+  --card-bg:        #ECEBE5;
+  --border:         #D0CEC4;
+  --border-hover:   #B8B6AC;
+  --text-primary:   #1A1918;
+  --text-secondary: #42413A;
+  --text-muted:     #6A6860;
+  --accent:         #00785A;
+  --accent-border:  rgba(0, 120, 90, 0.28);
+  --accent-dim:     rgba(0, 120, 90, 0.10);
 }
 
-/* 主题切换过渡（仅对 background/color/border，不影响其他动画） */
+/* ── 主题切换过渡 ── */
 html {
   transition: background-color 0.6s ease, color 0.4s ease;
 }
 
-/* 特殊元素亮色覆盖 */
-[data-theme="light"] .hero-headline {
+/* ══════════════════════════════════════
+   LIGHT — 蚀刻标题
+   text color = var(--surface) = 米白 = 融入背景
+   阴影：暗边左上（内凹），亮边右下（高光）
+══════════════════════════════════════ */
+[data-theme="light"] .hero-headline,
+[data-theme="light"] .sidebar-logo .name,
+[data-theme="light"] .lightbox-title,
+[data-theme="light"] .about-name,
+[data-theme="light"] .admin-title {
   text-shadow:
-    -1px -1px 0 rgba(196, 193, 184, 0.9),
-     1px  1px 0 rgba(255, 255, 255, 0.95);
+    -1px -1px 0 rgba(0, 0, 0, 0.16),
+     1px  1px 0 rgba(255, 255, 255, 0.88);
 }
 
+/* ══════════════════════════════════════
+   LIGHT — Grain / 噪点（白天减弱）
+══════════════════════════════════════ */
+[data-theme="light"] .grain-overlay { opacity: 0.010; }
+
+/* ══════════════════════════════════════
+   LIGHT — 滚动条
+══════════════════════════════════════ */
+[data-theme="light"] ::-webkit-scrollbar-track { background: var(--void); }
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: var(--edge-hi); }
+
+/* ══════════════════════════════════════
+   LIGHT — Cursor
+══════════════════════════════════════ */
+[data-theme="light"] .cursor-dot {
+  background: #005C42;
+  mix-blend-mode: multiply;
+  box-shadow: none;
+}
+[data-theme="light"] .cursor-ring { border-color: rgba(0, 120, 90, 0.35); }
+[data-theme="light"] .cursor-ring.hovering { border-color: rgba(0, 120, 90, 0.60); }
+
+/* ══════════════════════════════════════
+   LIGHT — Sidebar
+══════════════════════════════════════ */
+[data-theme="light"] .sidebar {
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.06);
+}
+[data-theme="light"] .sidebar::before { opacity: 0.006; }
+[data-theme="light"] .sidebar-logo::after {
+  background: radial-gradient(ellipse at 30% 60%, rgba(0, 120, 90, 0.04) 0%, transparent 70%);
+}
+[data-theme="light"] .status-dot {
+  box-shadow: 0 0 6px rgba(0, 120, 90, 0.50), 0 0 12px rgba(0, 120, 90, 0.20);
+}
+
+/* ══════════════════════════════════════
+   LIGHT — Hero
+══════════════════════════════════════ */
+[data-theme="light"] .hero-section::after {
+  background: radial-gradient(ellipse at 70% 50%, rgba(0, 120, 90, 0.04) 0%, transparent 65%);
+}
+
+/* ══════════════════════════════════════
+   LIGHT — Ticker
+══════════════════════════════════════ */
+[data-theme="light"] .ticker-wrap {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+/* ══════════════════════════════════════
+   LIGHT — Top bar（亮色毛玻璃）
+══════════════════════════════════════ */
+[data-theme="light"] .gallery-topbar {
+  background: rgba(244, 243, 238, 0.88);
+}
+
+/* ══════════════════════════════════════
+   LIGHT — Gallery cards
+══════════════════════════════════════ */
+[data-theme="light"] .gallery-item {
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.05),
+    0 4px 16px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+[data-theme="light"] .gallery-item:hover {
+  box-shadow:
+    0 6px 28px rgba(0, 0, 0, 0.10),
+    0 1px 4px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+/* 光扫效果在亮色背景上改为更明显的白色高光 */
+[data-theme="light"] .gallery-item::after {
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.40) 50%,
+    transparent 65%
+  );
+}
+[data-theme="light"] .gallery-item img { filter: saturate(0.95); }
+[data-theme="light"] .gallery-item:hover img { filter: saturate(1.06); }
+
+/* 序号角标 */
+[data-theme="light"] .gallery-item-index { color: rgba(0, 0, 0, 0.18); }
+
+/* Overlay 渐变 */
 [data-theme="light"] .gallery-item-overlay {
   background: linear-gradient(
     to top,
-    rgba(225, 223, 213, 0.95) 0%,
-    rgba(225, 223, 213, 0.4) 60%,
+    rgba(210, 208, 198, 0.96) 0%,
+    rgba(210, 208, 198, 0.45) 60%,
     transparent 100%
   );
 }
+[data-theme="light"] .gallery-item-title { color: #1A1918; }
 
-[data-theme="light"] .gallery-item-title {
-  color: #1C1B18;
+/* Tag chips */
+[data-theme="light"] .tag-chip {
+  color: #005C42;
+  background: rgba(0, 120, 90, 0.08);
+  border-color: rgba(0, 120, 90, 0.18);
 }
 
-[data-theme="light"] .grain-overlay {
-  opacity: 0.012;
+/* ══════════════════════════════════════
+   LIGHT — Lightbox
+══════════════════════════════════════ */
+[data-theme="light"] .lightbox-backdrop {
+  background: rgba(224, 222, 214, 0.92);
+}
+[data-theme="light"] .lightbox-container {
+  box-shadow: 0 16px 56px rgba(0, 0, 0, 0.14), 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+[data-theme="light"] .lightbox-nav-btn {
+  border-color: rgba(0, 0, 0, 0.10);
+  background: rgba(244, 243, 238, 0.88);
+  color: #42413A;
+}
+[data-theme="light"] .lightbox-nav-btn:hover {
+  border-color: var(--etch);
+  color: var(--etch);
+  background: rgba(244, 243, 238, 0.96);
 }
 
-[data-theme="light"] .sidebar::before {
-  opacity: 0.015;
+/* ══════════════════════════════════════
+   LIGHT — Media section
+══════════════════════════════════════ */
+[data-theme="light"] .media-section-header::after {
+  background: radial-gradient(ellipse at 80% 50%, rgba(0, 120, 90, 0.03) 0%, transparent 65%);
+}
+[data-theme="light"] .media-card {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+[data-theme="light"] .media-card:hover {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.65);
 }
 
-[data-theme="light"] .cursor-dot {
-  mix-blend-mode: multiply;
-  background: #007A5A;
+/* ══════════════════════════════════════
+   LIGHT — Skill / Contact（About 页）
+══════════════════════════════════════ */
+[data-theme="light"] .skill-tag:hover {
+  border-color: rgba(0, 120, 90, 0.28);
+  color: var(--etch);
 }
+[data-theme="light"] .contact-link:hover { color: var(--etch); }
 
-[data-theme="light"] .cursor-ring {
-  border-color: rgba(0, 145, 106, 0.4);
+/* ══════════════════════════════════════
+   LIGHT — Chat widget
+══════════════════════════════════════ */
+/* 浮动按钮：关闭原 chat-glow 动画（含硬编码荧光绿），改为柔和阴影 */
+[data-theme="light"] .chat-toggle-btn {
+  animation: chat-float 3s ease-in-out infinite;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10), 0 0 12px rgba(0, 120, 90, 0.12);
 }
-
-[data-theme="light"] .gallery-item {
-  box-shadow:
-    0 4px 20px rgba(0,0,0,0.10),
-    inset 0 1px 0 rgba(255,255,255,0.7);
+[data-theme="light"] .chat-toggle-btn:hover {
+  border-color: rgba(0, 120, 90, 0.40);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12), 0 0 18px rgba(0, 120, 90, 0.18);
 }
-
-[data-theme="light"] .gallery-item:hover {
-  box-shadow:
-    0 12px 40px rgba(0,0,0,0.15),
-    inset 0 1px 0 rgba(255,255,255,0.7);
+/* 信号圈改为深绿色 */
+[data-theme="light"] .chat-signal-ring {
+  border-color: rgba(0, 120, 90, 0.45);
 }
+/* 聊天窗口阴影 */
+[data-theme="light"] .chat-window {
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 120, 90, 0.08);
+}
+[data-theme="light"] .chat-textarea:focus {
+  border-color: rgba(0, 120, 90, 0.38);
+  box-shadow: 0 0 0 2px rgba(0, 120, 90, 0.07);
+}
+[data-theme="light"] .chat-send-btn { background: var(--etch); }
+[data-theme="light"] .chat-send-btn:not(:disabled):hover { background: #009870; }
+[data-theme="light"] .chat-about-link {
+  border-color: rgba(0, 120, 90, 0.35);
+  color: var(--etch);
+}
+[data-theme="light"] .chat-about-link:hover { background: rgba(0, 120, 90, 0.08); }
