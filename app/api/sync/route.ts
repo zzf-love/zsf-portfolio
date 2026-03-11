@@ -48,19 +48,39 @@ export async function POST(request: Request) {
       return hasValidPrefix;
     });
 
+    let updated = 0;
+
     for (const res of validResources) {
       const ext      = res.format ? `.${res.format}` : "";
       const basename = (res.public_id.split("/").pop() ?? res.public_id);
       const filename = basename.includes(".") ? basename : basename + ext;
+      const folder   = getFolderFromPublicId(res.public_id);
 
-      // 已存在则跳过
-      const existing = await prisma.image.findFirst({
-        where: { OR: [{ filename }, { cloudinaryId: res.public_id }] },
-      });
-      if (existing) { skipped++; continue; }
+      // 先按 cloudinaryId 查
+      const byId = await prisma.image.findFirst({ where: { cloudinaryId: res.public_id } });
+      if (byId) {
+        // cloudinaryId 匹配 → 若 URL 变了（CDN 路径调整）则更新
+        if (byId.url !== res.secure_url) {
+          await prisma.image.update({ where: { id: byId.id }, data: { url: res.secure_url } });
+          updated++;
+        } else {
+          skipped++;
+        }
+        continue;
+      }
 
-      const folder = getFolderFromPublicId(res.public_id);
+      // 再按 filename 查（图片在 Cloudinary 里移动了文件夹，public_id 前缀变了）
+      const byName = await prisma.image.findFirst({ where: { filename } });
+      if (byName) {
+        await prisma.image.update({
+          where: { id: byName.id },
+          data: { cloudinaryId: res.public_id, url: res.secure_url, folder },
+        });
+        updated++;
+        continue;
+      }
 
+      // 全新图片 → 新建
       await prisma.image.create({
         data: {
           filename,
@@ -77,9 +97,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       synced,
+      updated,
       skipped,
       total: validResources.length,
-      message: `同步完成：新增 ${synced} 张，已跳过 ${skipped} 张`,
+      message: `同步完成：新增 ${synced} 张，更新 ${updated} 张，已跳过 ${skipped} 张`,
     });
   } catch (error: any) {
     console.error("Sync error:", error);
