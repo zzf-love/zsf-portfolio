@@ -13,29 +13,29 @@ const DAILY_LIMIT = 10;
 /* ── 机器人 SVG 图标 ── */
 function RobotIcon({ talking }: { talking: boolean }) {
   return (
-    <svg width="28" height="36" viewBox="0 0 28 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width="28" height="36" viewBox="0 0 28 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="chat-robot-svg">
       {/* 天线 */}
-      <line x1="14" y1="8" x2="14" y2="2" stroke="#00ffaa" strokeWidth="1.5" strokeLinecap="round" />
-      <circle cx="14" cy="1.5" r="1.5" fill="#00ffaa" className="chat-antenna-dot" />
+      <line x1="14" y1="8" x2="14" y2="2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="14" cy="1.5" r="1.5" fill="currentColor" className="chat-antenna-dot" />
       {/* 头部 */}
-      <rect x="2" y="8" width="24" height="16" rx="3" stroke="#00ffaa" strokeWidth="1.5" fill="rgba(0,255,170,0.06)" />
+      <rect x="2" y="8" width="24" height="16" rx="3" stroke="currentColor" strokeWidth="1.5" fill="currentColor" fillOpacity="0.06" />
       {/* 左眼 */}
-      <rect x="6" y="13" width="5" height="4" rx="1" fill="#00ffaa" className="chat-eye-left" />
+      <rect x="6" y="13" width="5" height="4" rx="1" fill="currentColor" className="chat-eye-left" />
       {/* 右眼 */}
-      <rect x="17" y="13" width="5" height="4" rx="1" fill="#00ffaa" className="chat-eye-right" />
+      <rect x="17" y="13" width="5" height="4" rx="1" fill="currentColor" className="chat-eye-right" />
       {/* 嘴巴（三点）*/}
-      <circle cx="9" cy="21" r="1" fill="#00ffaa" opacity="0.7" />
+      <circle cx="9" cy="21" r="1" fill="currentColor" opacity="0.7" />
       <circle
-        cx="14" cy="21" r="1" fill="#00ffaa" opacity="0.9"
+        cx="14" cy="21" r="1" fill="currentColor" opacity="0.9"
         className={talking ? "chat-mouth-mid-talk" : ""}
       />
-      <circle cx="19" cy="21" r="1" fill="#00ffaa" opacity="0.7" />
+      <circle cx="19" cy="21" r="1" fill="currentColor" opacity="0.7" />
       {/* 身体 */}
-      <rect x="6" y="25" width="16" height="9" rx="2" stroke="#00ffaa" strokeWidth="1.2" fill="rgba(0,255,170,0.04)" />
+      <rect x="6" y="25" width="16" height="9" rx="2" stroke="currentColor" strokeWidth="1.2" fill="currentColor" fillOpacity="0.04" />
       {/* 身体格栅线 */}
-      <line x1="10" y1="25" x2="10" y2="34" stroke="#00ffaa" strokeWidth="0.6" opacity="0.3" />
-      <line x1="18" y1="25" x2="18" y2="34" stroke="#00ffaa" strokeWidth="0.6" opacity="0.3" />
-      <line x1="6" y1="29" x2="22" y2="29" stroke="#00ffaa" strokeWidth="0.6" opacity="0.3" />
+      <line x1="10" y1="25" x2="10" y2="34" stroke="currentColor" strokeWidth="0.6" opacity="0.3" />
+      <line x1="18" y1="25" x2="18" y2="34" stroke="currentColor" strokeWidth="0.6" opacity="0.3" />
+      <line x1="6" y1="29" x2="22" y2="29" stroke="currentColor" strokeWidth="0.6" opacity="0.3" />
     </svg>
   );
 }

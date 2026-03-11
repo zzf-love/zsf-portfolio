@@ -1795,6 +1795,10 @@ html {
 /* ══════════════════════════════════════
    LIGHT — Chat widget
 ══════════════════════════════════════ */
+/* 机器人 SVG 颜色：默认荧光绿，日间切换为深绿 */
+.chat-robot-svg { color: #00ffaa; }
+[data-theme="light"] .chat-robot-svg { color: var(--etch); }
+
 /* 浮动按钮：关闭原 chat-glow 动画（含硬编码荧光绿），改为柔和阴影 */
 [data-theme="light"] .chat-toggle-btn {
   animation: chat-float 3s ease-in-out infinite;
