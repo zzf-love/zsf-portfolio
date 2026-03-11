@@ -3,9 +3,20 @@ import { cloudinary } from "@/lib/cloudinary";
 import { prisma } from "@/lib/db";
 import { verifyAdminRequest } from "@/lib/auth";
 
-/** 根据文件名前缀推断所属分类 */
+/** 根据 Cloudinary 路径或文件名前缀推断所属分类
+ *  优先读取路径中的文件夹部分（e.g. "xcxd/timestamp_img.jpg" → "xcxd"）
+ *  其次回退到文件名前缀（e.g. "xcxd_xxx.jpg" → "xcxd"）
+ */
 function getFolderFromPublicId(publicId: string): string {
-  const name = publicId.split("/").pop() ?? publicId;
+  const parts  = publicId.split("/");
+  const name   = parts.pop() ?? publicId;
+  const parent = parts.length > 0 ? parts[parts.length - 1] : "";
+
+  // Cloudinary 文件夹名称直接对应 folder 值
+  const VALID_FOLDERS = ["xcxd", "add", "older_work", "others"] as const;
+  if (VALID_FOLDERS.includes(parent as typeof VALID_FOLDERS[number])) return parent;
+
+  // 回退：文件名前缀
   if (name.startsWith("ow_"))   return "older_work";
   if (name.startsWith("add_"))  return "add";
   if (name.startsWith("xcxd_")) return "xcxd";
