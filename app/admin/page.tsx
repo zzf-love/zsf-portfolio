@@ -12,7 +12,7 @@ import MediaManager from "@/components/admin/MediaManager";
 const Cursor = dynamic(() => import("@/components/Cursor"), { ssr: false });
 const GrainOverlay = dynamic(() => import("@/components/GrainOverlay"), { ssr: false });
 
-type Tab = "images" | "upload" | "media";
+type Tab = "images" | "upload" | "media" | "settings";
 type ViewMode = "list" | "grid";
 
 export default function AdminPage() {
@@ -80,6 +80,33 @@ export default function AdminPage() {
 
   const [syncing, setSyncing] = useState(false);
   const [syncMsg, setSyncMsg] = useState("");
+
+  /* ── 开屏词语设置 ── */
+  const [introSkills, setIntroSkills] = useState<string[]>([]);
+  const [skillsLoading, setSkillsLoading] = useState(false);
+  const [skillsSaved, setSkillsSaved] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((r) => r.json())
+      .then((d) => setIntroSkills(d.skills ?? []))
+      .catch(() => {});
+  }, []);
+
+  const handleSaveSkills = async () => {
+    setSkillsLoading(true);
+    setSkillsSaved(false);
+    try {
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ skills: introSkills }),
+      });
+      if (res.ok) setSkillsSaved(true);
+    } catch {}
+    setSkillsLoading(false);
+    setTimeout(() => setSkillsSaved(false), 3000);
+  };
 
   const handleSync = async () => {
     setSyncing(true);
@@ -209,6 +236,7 @@ export default function AdminPage() {
             { id: "images" as Tab, label: "图片管理" },
             { id: "upload" as Tab, label: "上传图片" },
             { id: "media" as Tab, label: "社交媒体" },
+            { id: "settings" as Tab, label: "⚙ 网站设置" },
           ].map((t) => (
             <button
               key={t.id}
@@ -407,6 +435,75 @@ export default function AdminPage() {
 
         {/* ── Media Tab ── */}
         {tab === "media" && <MediaManager />}
+
+        {/* ── Settings Tab ── */}
+        {tab === "settings" && (
+          <div style={{ maxWidth: 560 }}>
+            <div style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "10px", color: "var(--accent)", letterSpacing: "3px", textTransform: "uppercase", marginBottom: "24px" }}>
+              开屏介绍词
+            </div>
+            <p style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "11px", color: "var(--text-muted)", lineHeight: 1.8, marginBottom: "20px", letterSpacing: "0.5px" }}>
+              访客首次打开网站时，会以滚动槽动画依次展示以下词语。每行一个，顺序即展示顺序。
+            </p>
+
+            {/* 词语列表 */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "16px" }}>
+              {introSkills.map((skill, i) => (
+                <div key={i} style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                  <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "10px", color: "var(--text-muted)", width: "20px", textAlign: "right", flexShrink: 0 }}>
+                    {i + 1}
+                  </span>
+                  <input
+                    className="admin-input"
+                    value={skill}
+                    onChange={(e) => {
+                      const next = [...introSkills];
+                      next[i] = e.target.value;
+                      setIntroSkills(next);
+                    }}
+                    placeholder={`词语 ${i + 1}`}
+                    style={{ flex: 1 }}
+                  />
+                  <button
+                    type="button"
+                    className="admin-btn danger"
+                    style={{ fontSize: "11px", padding: "6px 10px", flexShrink: 0 }}
+                    onClick={() => setIntroSkills(introSkills.filter((_, j) => j !== i))}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {/* 新增 + 保存 */}
+            <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+              <button
+                type="button"
+                className="admin-btn"
+                onClick={() => setIntroSkills([...introSkills, ""])}
+              >
+                + 添加词语
+              </button>
+              <button
+                type="button"
+                className="admin-btn primary"
+                disabled={skillsLoading}
+                onClick={handleSaveSkills}
+              >
+                {skillsLoading ? "保存中..." : "保存"}
+              </button>
+              {skillsSaved && (
+                <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "10px", color: "var(--accent)", letterSpacing: "1px" }}>
+                  已保存 ✓
+                </span>
+              )}
+            </div>
+            <p style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "10px", color: "var(--text-muted)", marginTop: "16px", lineHeight: 1.7 }}>
+              提示：动画每个词语停留约 1.1 秒，保存后刷新前台（清除浏览器 sessionStorage）即可预览。
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

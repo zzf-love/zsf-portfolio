@@ -10,6 +10,7 @@ import { CATEGORIES } from "@/lib/categories";
 
 const Cursor = dynamic(() => import("@/components/Cursor"), { ssr: false });
 const GrainOverlay = dynamic(() => import("@/components/GrainOverlay"), { ssr: false });
+const IntroOverlay = dynamic(() => import("@/components/IntroOverlay"), { ssr: false });
 
 export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState("all");
@@ -27,6 +28,7 @@ export default function HomePage() {
     <>
       <Cursor />
       <GrainOverlay />
+      <IntroOverlay />
 
       <MobileMenuButton
         isOpen={sidebarOpen}

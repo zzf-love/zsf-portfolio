@@ -1827,3 +1827,100 @@ html {
   color: var(--etch);
 }
 [data-theme="light"] .chat-about-link:hover { background: rgba(0, 120, 90, 0.08); }
+
+/* ══════════════════════════════════════
+   INTRO OVERLAY — 开屏技能槽
+══════════════════════════════════════ */
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(7, 7, 8, 0.16);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  pointer-events: none;
+  animation: intro-fade-in 0.5s ease both;
+}
+
+[data-theme="light"] .intro-overlay {
+  background: rgba(244, 243, 238, 0.22);
+}
+
+.intro-overlay.intro-exiting {
+  opacity: 0;
+  transition: opacity 0.65s ease;
+}
+
+@keyframes intro-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* 面板：箭头 + 滚动槽并排 */
+.intro-panel {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+/* 箭头列：等高于 window，自身垂直居中 */
+.intro-arrow-col {
+  height: 320px; /* 5 × 64px */
+  display: flex;
+  align-items: center;
+}
+
+.intro-arrow {
+  font-family: var(--mono);
+  font-size: 30px;
+  line-height: 1;
+  color: var(--etch);
+  user-select: none;
+  animation: arrow-nudge 1.15s ease-in-out infinite;
+}
+
+@keyframes arrow-nudge {
+  0%, 100% { opacity: 0.55; transform: translateX(0); }
+  50%       { opacity: 1;    transform: translateX(5px); }
+}
+
+/* 滚动槽窗口 */
+.intro-window {
+  height: 320px; /* 5 × 64px */
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0,0,0,0.5) 14%,
+    black 28%,
+    black 72%,
+    rgba(0,0,0,0.5) 86%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0,0,0,0.5) 14%,
+    black 28%,
+    black 72%,
+    rgba(0,0,0,0.5) 86%,
+    transparent 100%
+  );
+}
+
+/* 词语列表容器 */
+.intro-list {
+  transition: transform 0.46s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 单个词语行 */
+.intro-item {
+  display: flex;
+  align-items: center;
+  font-family: var(--mono);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
