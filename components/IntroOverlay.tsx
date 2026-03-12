@@ -13,29 +13,27 @@ const DEFAULT_SKILLS = [
 ];
 
 export default function IntroOverlay() {
-  const [skills, setSkills] = useState<string[]>([]);
+  /* 同步读 sessionStorage — 组件是纯客户端，无 SSR 问题 */
+  const [show, setShow] = useState<boolean>(() => {
+    try { return !sessionStorage.getItem("intro_seen"); }
+    catch { return false; }
+  });
+  const [skills, setSkills] = useState<string[]>(DEFAULT_SKILLS);
   const [step, setStep]     = useState(0);
-  const [show, setShow]     = useState(false);
   const [exiting, setExiting] = useState(false);
 
-  /* ── 加载词语 ── */
+  /* ── 后台静默拉取自定义词语（不阻塞显示） ── */
   useEffect(() => {
-    if (sessionStorage.getItem("intro_seen")) return;
+    if (!show) return;
     fetch("/api/settings")
       .then((r) => r.json())
-      .then((d) => {
-        setSkills(d.skills?.length ? d.skills : DEFAULT_SKILLS);
-        setShow(true);
-      })
-      .catch(() => {
-        setSkills(DEFAULT_SKILLS);
-        setShow(true);
-      });
-  }, []);
+      .then((d) => { if (d.skills?.length) setSkills(d.skills); })
+      .catch(() => {});
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   /* ── 逐步推进 ── */
   useEffect(() => {
-    if (!show || skills.length === 0) return;
+    if (!show) return;
     let s = 0;
     const tick = () => {
       s++;
